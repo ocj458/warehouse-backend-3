@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /* ================= DATABASE CONNECT ================= */
 // Use MONGO_URI from environment variables for Render
 // Fallback to localhost for local development
-const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/warehouse';
+const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/';
 
 mongoose.connect(mongoURI, {
   serverSelectionTimeoutMS: 30000 // 30s timeout
