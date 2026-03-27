@@ -12,10 +12,13 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* ================= DATABASE CONNECT ================= */
-// Use cloud MongoDB if MONGO_URI is set, otherwise fallback to localhost
+// Use MONGO_URI from environment variables for Render
+// Fallback to localhost for local development
 const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/warehouse';
 
-mongoose.connect(mongoURI)
+mongoose.connect(mongoURI, {
+  serverSelectionTimeoutMS: 30000 // 30s timeout
+})
   .then(() => console.log('✅ MongoDB Connected'))
   .catch(err => {
     console.error('❌ MongoDB Error:', err);
