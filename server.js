@@ -5,7 +5,6 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
@@ -13,9 +12,15 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* ================= DATABASE CONNECT ================= */
-mongoose.connect('mongodb://127.0.0.1:27017/warehouse')
-.then(() => console.log('✅ MongoDB Connected'))
-.catch(err => console.error('❌ MongoDB Error:', err));
+// Use cloud MongoDB if MONGO_URI is set, otherwise fallback to localhost
+const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/warehouse';
+
+mongoose.connect(mongoURI)
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch(err => {
+    console.error('❌ MongoDB Error:', err);
+    process.exit(1); // Exit if DB connection fails
+  });
 
 /* ================= MODELS ================= */
 const User = mongoose.model('User', {
@@ -123,6 +128,7 @@ app.patch('/update-item', async (req, res) => {
 });
 
 /* ================= SERVER ================= */
-app.listen(3000, () => {
-  console.log("🚀 Server running on http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
